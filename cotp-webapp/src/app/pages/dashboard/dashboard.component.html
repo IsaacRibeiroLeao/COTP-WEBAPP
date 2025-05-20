@@ -1,0 +1,160 @@
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+  <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+    <div>
+      <h3 class="text-lg md:text-xl leading-6 font-medium text-gray-900">Painel de Controle</h3>
+      <p class="mt-1 max-w-2xl text-sm text-gray-500">Bem-vindo ao Sistema de Gestão COTP</p>
+    </div>
+    <button (click)="refreshData()" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+      </svg>
+      Atualizar
+    </button>
+  </div>
+  
+  <div class="border-t border-gray-200">
+    <dl>
+      <div class="px-4 py-5 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 sm:px-6 bg-gray-50">
+        <div class="text-sm font-medium text-gray-500">Status do Sistema</div>
+        <div class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+            Ativo
+          </span>
+        </div>
+      </div>
+      
+      <div class="px-4 py-5 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 sm:px-6">
+        <div class="text-sm font-medium text-gray-500">Conexão com API</div>
+        <div class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+          <span *ngIf="!apiError" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+            Conectado
+          </span>
+          <span *ngIf="apiError" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+            Erro de Conexão
+          </span>
+        </div>
+      </div>
+    </dl>
+  </div>
+</div>
+
+<div class="mt-8 px-4 sm:px-6">
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <!-- Card 1: Usuários -->
+    <div class="bg-white overflow-hidden shadow rounded-lg transition-all hover:shadow-md">
+      <div class="px-4 py-5 sm:p-6">
+        <div class="flex flex-col sm:flex-row items-center">
+          <div class="flex-shrink-0 mb-3 sm:mb-0 bg-indigo-500 rounded-md p-3">
+            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          </div>
+          <div class="sm:ml-5 w-full sm:w-0 flex-1 text-center sm:text-left">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">
+                Total de Usuários
+              </dt>
+              <dd>
+                <div class="text-lg font-medium text-gray-900 text-center sm:text-left">
+                  <span *ngIf="isLoading" class="inline-flex items-center">
+                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Carregando...
+                  </span>
+                  <span *ngIf="!isLoading">{{ totalUsers }}</span>
+                </div>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-4 py-4 sm:px-6 text-center sm:text-left">
+        <div class="text-sm">
+          <a routerLink="/users" class="font-medium text-indigo-600 hover:text-indigo-500">
+            Ver todos os usuários
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Eventos -->
+    <div class="bg-white overflow-hidden shadow rounded-lg transition-all hover:shadow-md">
+      <div class="px-4 py-5 sm:p-6">
+        <div class="flex flex-col sm:flex-row items-center">
+          <div class="flex-shrink-0 mb-3 sm:mb-0 bg-indigo-500 rounded-md p-3">
+            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div class="sm:ml-5 w-full sm:w-0 flex-1 text-center sm:text-left">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">
+                Eventos
+              </dt>
+              <dd>
+                <div class="text-lg font-medium text-gray-900 text-center sm:text-left">
+                  <span *ngIf="isLoading" class="inline-flex items-center">
+                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Carregando...
+                  </span>
+                  <span *ngIf="!isLoading">{{ totalEvents }}</span>
+                </div>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-4 py-4 sm:px-6 text-center sm:text-left">
+        <div class="text-sm">
+          <a routerLink="/event-registration" class="font-medium text-indigo-600 hover:text-indigo-500">
+            Ver todos os eventos
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: Aprovações -->
+    <div class="bg-white overflow-hidden shadow rounded-lg transition-all hover:shadow-md">
+      <div class="px-4 py-5 sm:p-6">
+        <div class="flex flex-col sm:flex-row items-center">
+          <div class="flex-shrink-0 mb-3 sm:mb-0 bg-indigo-500 rounded-md p-3">
+            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+            </svg>
+          </div>
+          <div class="sm:ml-5 w-full sm:w-0 flex-1 text-center sm:text-left">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">
+                Aprovações Pendentes
+              </dt>
+              <dd>
+                <div class="text-lg font-medium text-gray-900 text-center sm:text-left">
+                  <span *ngIf="isLoading" class="inline-flex items-center">
+                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Carregando...
+                  </span>
+                  <span *ngIf="!isLoading">{{ pendingApprovals }}</span>
+                </div>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-4 py-4 sm:px-6 text-center sm:text-left">
+        <div class="text-sm">
+          <a routerLink="/approvals" class="font-medium text-indigo-600 hover:text-indigo-500">
+            Ver todas as aprovações
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
